@@ -1,28 +1,36 @@
 
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import sys
-# def bits(f):
-#     bytes = (ord(b) for b in f.read())
-#     for b in bytes:
-#         for i in xrange(8):
-#             yield (b >> i) & 1
+import os 
 
-# string = ""
-# for b in bits(open('test.txt', 'r')):
-#     string += str(b)
-
-# string = string[::-1]
-
-string = "helo"
 byte_string = ""
+NULL = "00000000"
 
-for ch in string:
-	byte_string += bin(ord(ch))[2:].zfill(8)
+# prepare the secret file
+
+# get the file name
+file_name = os.path.splitext(os.path.basename("hide.txt"))
+
+# open the file and store bytes into data_byte_array
+with open(file_name[0] + file_name[1], 'rb') as f:
+	data_byte_array = bytearray(f.read())
+
+# store the each bit in data_byte_array into byte_string
+
+for byte in data_byte_array:
+	byte_string += bin(byte)[2:].zfill(8)
 
 print byte_string
+print len(byte_string)
 
-cover = Image.open("original.png")
+
+# prepare the cover image
+
+# load the cover image
+cover = Image.open("tux.bmp")
+# 
 rgba_cover = cover.convert('RGB')
+# load pixels of rgba_cover
 pixels = rgba_cover.load()
 cover_width, cover_height = cover.size
 
@@ -61,10 +69,10 @@ def stego():
 					
 
 				pixels[x,y] = (rgba_decimal_array[0],rgba_decimal_array[1],rgba_decimal_array[2])
-				print pixels[x, y]
+				# print pixels[x, y]
 
 
-
+			# if there are less than 3 bits left to store, take the next pixel and store the bits into it. 
 			if len(byte_string) - byte_array_index < 3:
 				if final_pixel_flag == 0:
 					final_pixel_flag = 1
@@ -76,13 +84,13 @@ def stego():
 						rgba_decimal_array[i] = (int(''.join(str(e) for e in rgba_array[i]), 2))
 
 					pixels[x,y] = (rgba_decimal_array[0],rgba_decimal_array[1],rgba_decimal_array[2])
-					print pixels[x, y]
+					# print pixels[x, y]
 					# print "byte_array_index: " + `byte_array_index`
 					# print "total bits: " + str(len(byte_string))
 					return;
 
 stego()
 
-rgba_cover.save("cover.png")
+rgba_cover.save("cover.bmp")
 
 
