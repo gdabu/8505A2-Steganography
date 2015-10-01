@@ -10,6 +10,12 @@
 
 # print string
 
+
+import os 
+
+file_name = os.path.splitext(os.path.basename("test.txt"))
+
+
 with open('test.txt', 'rb') as f:
 	bytes = bytearray(f.read())
 
