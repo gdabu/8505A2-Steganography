@@ -81,7 +81,8 @@ def stego():
 					for i in range(len(byte_string) - byte_array_index):
 						rgba_array[i][7] = byte_string[byte_array_index]
 						rgba_decimal_array[i] = (int(''.join(str(e) for e in rgba_array[i]), 2))
-
+						# byte_array_index += 1
+					print pixels[x, y]
 					pixels[x,y] = (rgba_decimal_array[0],rgba_decimal_array[1],rgba_decimal_array[2])
 					# print pixels[x, y]
 					# print "byte_array_index: " + `byte_array_index`
@@ -90,6 +91,6 @@ def stego():
 
 stego()
 
-rgba_cover.save("test-2.bmp")
+rgba_cover.save("germany.bmp")
 
 
