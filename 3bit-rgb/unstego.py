@@ -7,7 +7,7 @@ import array
 
 
 
-cover = Image.open("test.bmp")
+cover = Image.open("test-2.bmp")
 rgba_cover = cover.convert('RGB')
 pixels = rgba_cover.load()
 cover_width, cover_height = cover.size
@@ -20,7 +20,7 @@ def stego():
 	byte_array_index = 0;
 	
 
-	secret_message_size = 40
+	secret_message_size = 488
 	secret_message_index = 0
 
 	# iterate through each pixel of the cover

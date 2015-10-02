@@ -9,7 +9,7 @@ NULL = "00000000"
 # prepare the secret file
 
 # get the file name
-file_name = os.path.splitext(os.path.basename("hide.bmp"))
+file_name = os.path.splitext(os.path.basename("hide.txt"))
 
 # open the file and store bytes into data_byte_array
 with open(file_name[0] + file_name[1], 'rb') as f:
@@ -90,6 +90,6 @@ def stego():
 
 stego()
 
-rgba_cover.save("cover.bmp")
+rgba_cover.save("test-2.bmp")
 
 
