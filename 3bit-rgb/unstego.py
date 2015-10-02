@@ -1,10 +1,13 @@
 
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import sys
+import array
 
 
 
-cover = Image.open("cover.bmp")
+
+
+cover = Image.open("test.bmp")
 rgba_cover = cover.convert('RGB')
 pixels = rgba_cover.load()
 cover_width, cover_height = cover.size
@@ -17,7 +20,7 @@ def stego():
 	byte_array_index = 0;
 	
 
-	secret_message_size = 32
+	secret_message_size = 40
 	secret_message_index = 0
 
 	# iterate through each pixel of the cover
@@ -41,7 +44,29 @@ def stego():
 stego()
 
 secret_message = ""
-for i in range(0, secret_message_size):
+# bit_counter = 0
+# byte = ""
+
+byte_array = []
+
+for i in range(secret_message_size):
 	secret_message += bit_array[i]
 
-print secret_message
+
+write_byte_arrray = []
+
+# convert bit string into array of bytes in decimal format. 
+for i in range (0, len(secret_message)/8):
+	write_byte_arrray.append(int(secret_message[i*8:(i+1) * 8], 2))
+
+bytes_array = array.array('B', write_byte_arrray).tostring()
+secrets = bytearray(bytes_array)
+
+w = open('elton.txt', 'w')
+w.write(secrets)
+
+
+
+
+
+

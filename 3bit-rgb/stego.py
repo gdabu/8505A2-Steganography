@@ -9,7 +9,7 @@ NULL = "00000000"
 # prepare the secret file
 
 # get the file name
-file_name = os.path.splitext(os.path.basename("hide.txt"))
+file_name = os.path.splitext(os.path.basename("hide.bmp"))
 
 # open the file and store bytes into data_byte_array
 with open(file_name[0] + file_name[1], 'rb') as f:
@@ -49,7 +49,6 @@ def stego():
 			listr = list(bin(r)[2:].zfill(8))
 			listg = list(bin(g)[2:].zfill(8))
 			listb = list(bin(b)[2:].zfill(8))
-			# lista = list(bin(a)[2:].zfill(8))
 			
 			rgba_array = [listr, listg, listb]
 			rgba_decimal_array = []
