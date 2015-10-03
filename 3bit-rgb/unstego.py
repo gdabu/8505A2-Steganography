@@ -52,38 +52,19 @@ def stego():
 					elif byte == "00000000" and nullcount == 1:
 						print bytez[0:len(bytez) - 1]
 						secret_message_size = ''.join(binascii.unhexlify('%x' % int(b,2)) for b in bytez[0:len(bytez) - 1])
+						print secret_message_size
 						bytez = []
 						nullcount += 1
 						continue;
 					byte = ""
 
 				if nullcount == 2:
-					print type(secret_message_size)
-					if int(secret_message_index) < 208:
+					if secret_message_index < int(secret_message_size):
 						bit_array += rgb_bit_array[i]
 						secret_message_index += 1
 					else:
 						return
 
-				# ''.join(chr(int(binStringSecretMsg[i:i+8], 2)) for i in xrange(0, len(binStringSecretMsg), 8))
-				# print secret_message_index
-
-
-			# ----------------------------------------------------
-
-			# if secret_message_index <= secret_message_size:
-			# 	# gather rgba values of the pixel located on x, y.
-			# 	r, g, b = pixels[x, y]
-			# 	# print pixels[x, y]
-			# 	r_str = str(bin(r)[2:].zfill(8))[7]
-			# 	g_str = str(bin(g)[2:].zfill(8))[7]
-			# 	b_str = str(bin(b)[2:].zfill(8))[7]
-			# 	bit_array +=  r_str + g_str + b_str
-				
-			# 	secret_message_index += 3
-
-			# else:
-			# 	return
 stego()
 
 secret_message = ""
@@ -104,7 +85,7 @@ for i in range (0, len(secret_message)/8):
 bytes_array = array.array('B', write_byte_arrray).tostring()
 secrets = bytearray(bytes_array)
 
-w = open('elton-3.txt', 'w')
+w = open('secret.txt', 'w')
 w.write(secrets)
 
 
