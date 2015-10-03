@@ -10,7 +10,7 @@ NULL = "00000000"
 # prepare the secret file
 
 # get the file name
-file_name = os.path.basename("text.txt")
+file_name = os.path.basename("test-1.bmp")
 
 file_name_binary = ""
 

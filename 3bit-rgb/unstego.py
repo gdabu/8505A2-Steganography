@@ -15,10 +15,12 @@ pixels = rgba_cover.load()
 cover_width, cover_height = cover.size
 bit_array = ""
 secret_message_size = 0
+file_name = ""
 
 def stego():
 	global bit_array
 	global secret_message_size
+	global file_name
 	byte_array_index = 0;
 	byte = ""
 	bytez = []
@@ -26,6 +28,7 @@ def stego():
 	secret_message_index = 0
 	nullcount = 0
 	file_size = ""
+
 
 	# iterate through each pixel of the cover
 	for x in range(cover_width):
@@ -47,24 +50,24 @@ def stego():
 					bytez.append(byte)
 					if byte == "00000000" and nullcount == 0:
 						print bytez[0:len(bytez) - 1]
+						file_name = ''.join(binascii.unhexlify('%x' % int(b,2)) for b in bytez[0:len(bytez) - 1])
+						print "file name: " + file_name
 						bytez = []
 						nullcount += 1
 					elif byte == "00000000" and nullcount == 1:
 						print bytez[0:len(bytez) - 1]
 						secret_message_size = ''.join(binascii.unhexlify('%x' % int(b,2)) for b in bytez[0:len(bytez) - 1])
-						print secret_message_size
 						bytez = []
 						nullcount += 1
 						continue;
 					byte = ""
 
 				if nullcount == 2:
-					if secret_message_index < int(secret_message_size):
+					if int(secret_message_index) < int(secret_message_size):
 						bit_array += rgb_bit_array[i]
 						secret_message_index += 1
 					else:
 						return
-
 stego()
 
 secret_message = ""
@@ -84,8 +87,7 @@ for i in range (0, len(secret_message)/8):
 
 bytes_array = array.array('B', write_byte_arrray).tostring()
 secrets = bytearray(bytes_array)
-
-w = open('secret.txt', 'w')
+w = open("secret-" + file_name, 'w')
 w.write(secrets)
 
 
