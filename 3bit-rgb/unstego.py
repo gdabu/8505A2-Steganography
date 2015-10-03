@@ -2,12 +2,14 @@
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import sys
 import array
+import binascii
 
 
 
 
 
-cover = Image.open("germany-1.bmp")
+
+cover = Image.open("germany.bmp")
 rgba_cover = cover.convert('RGB')
 pixels = rgba_cover.load()
 cover_width, cover_height = cover.size
@@ -18,41 +20,80 @@ def stego():
 	global bit_array
 	global secret_message_size
 	byte_array_index = 0;
-	
-
-	secret_message_size = 512
+	byte = ""
+	bytez = []
+	secret_message_size = 208
 	secret_message_index = 0
+	nullcount = 0
+	file_size = ""
 
 	# iterate through each pixel of the cover
 	for x in range(cover_width):
 		for y in range(cover_height):
+			r, g, b = pixels[x, y]
+			# ----------------------------------------------------
+			r_str = str(bin(r)[2:].zfill(8))[7]
+			g_str = str(bin(g)[2:].zfill(8))[7]
+			b_str = str(bin(b)[2:].zfill(8))[7]
 
-			if secret_message_index <= secret_message_size:
-				# gather rgba values of the pixel located on x, y.
-				r, g, b = pixels[x, y]
-				# print pixels[x, y]
-				r_str = str(bin(r)[2:].zfill(8))[7]
-				g_str = str(bin(g)[2:].zfill(8))[7]
-				b_str = str(bin(b)[2:].zfill(8))[7]
-				bit_array +=  r_str + g_str + b_str
+			rgb_bit_array = [r_str, g_str, b_str]
+
+			for i in range(len(rgb_bit_array)):
 				
-				secret_message_index += 3
+				
+				byte += rgb_bit_array[i]
 
-			else:
-				print bit_array
-				return
+				if len(byte) == 8:
+					bytez.append(byte)
+					if byte == "00000000" and nullcount == 0:
+						print bytez[0:len(bytez) - 1]
+						bytez = []
+						nullcount += 1
+					elif byte == "00000000" and nullcount == 1:
+						print bytez[0:len(bytez) - 1]
+						secret_message_size = ''.join(binascii.unhexlify('%x' % int(b,2)) for b in bytez[0:len(bytez) - 1])
+						bytez = []
+						nullcount += 1
+						continue;
+					byte = ""
+
+				if nullcount == 2:
+					print type(secret_message_size)
+					if int(secret_message_index) < 208:
+						bit_array += rgb_bit_array[i]
+						secret_message_index += 1
+					else:
+						return
+
+				# ''.join(chr(int(binStringSecretMsg[i:i+8], 2)) for i in xrange(0, len(binStringSecretMsg), 8))
+				# print secret_message_index
+
+
+			# ----------------------------------------------------
+
+			# if secret_message_index <= secret_message_size:
+			# 	# gather rgba values of the pixel located on x, y.
+			# 	r, g, b = pixels[x, y]
+			# 	# print pixels[x, y]
+			# 	r_str = str(bin(r)[2:].zfill(8))[7]
+			# 	g_str = str(bin(g)[2:].zfill(8))[7]
+			# 	b_str = str(bin(b)[2:].zfill(8))[7]
+			# 	bit_array +=  r_str + g_str + b_str
+				
+			# 	secret_message_index += 3
+
+			# else:
+			# 	return
 stego()
 
 secret_message = ""
-# bit_counter = 0
-# byte = ""
 
 byte_array = []
 
-for i in range(secret_message_size):
+for i in range(int(secret_message_size)):
 	secret_message += bit_array[i]
 
-print(len(secret_message))
+# print(len(secret_message))
 print secret_message
 write_byte_arrray = []
 
@@ -63,7 +104,7 @@ for i in range (0, len(secret_message)/8):
 bytes_array = array.array('B', write_byte_arrray).tostring()
 secrets = bytearray(bytes_array)
 
-w = open('elton-1.txt', 'w')
+w = open('elton-3.txt', 'w')
 w.write(secrets)
 
 

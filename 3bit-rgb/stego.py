@@ -2,6 +2,7 @@
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import sys
 import os 
+import binascii
 
 byte_string = ""
 NULL = "00000000"
@@ -9,20 +10,46 @@ NULL = "00000000"
 # prepare the secret file
 
 # get the file name
-file_name = os.path.splitext(os.path.basename("hide.txt"))
+file_name = os.path.basename("test.txt")
+
+file_name_binary = ""
+
+# ------------------------------------------------------
+
+for c in file_name:
+	file_name_binary += format(ord(c), 'b').zfill(8)
+
+print file_name_binary
+print len(file_name_binary)
+
+byte_string += file_name_binary + NULL
+
+# ------------------------------------------------------
 
 # open the file and store bytes into data_byte_array
-with open(file_name[0] + file_name[1], 'rb') as f:
+with open(file_name, 'rb') as f:
 	data_byte_array = bytearray(f.read())
 
+file_data_binary = ""
+
 # store the each bit in data_byte_array into byte_string
-
 for byte in data_byte_array:
-	byte_string += bin(byte)[2:].zfill(8)
+	file_data_binary += bin(byte)[2:].zfill(8)
 
-print byte_string
-print len(byte_string)
+print file_data_binary
 
+file_size = list(str(len(file_data_binary)))
+file_size_binary = ''.join(format(ord(x), 'b').zfill(8) for x in file_size)
+file_size_binary += NULL
+
+# print "file_size: " + `len(file_data_binary)`
+# print "file_size_binary: " + file_size_binary
+
+byte_string += file_size_binary + file_data_binary
+# print byte_string
+# print len(byte_string)
+
+# ------------------------------------------------------
 
 # prepare the cover image
 
@@ -81,7 +108,7 @@ def stego():
 					for i in range(len(byte_string) - byte_array_index):
 						rgba_array[i][7] = byte_string[byte_array_index]
 						rgba_decimal_array[i] = (int(''.join(str(e) for e in rgba_array[i]), 2))
-						# byte_array_index += 1
+						byte_array_index += 1
 					print pixels[x, y]
 					pixels[x,y] = (rgba_decimal_array[0],rgba_decimal_array[1],rgba_decimal_array[2])
 					# print pixels[x, y]
